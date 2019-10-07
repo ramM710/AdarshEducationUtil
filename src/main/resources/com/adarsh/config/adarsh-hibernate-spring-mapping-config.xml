@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="
+         http://www.springframework.org/schema/beans
+         http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+         http://www.springframework.org/schema/tx
+         http://www.springframework.org/schema/tx/spring-tx-3.1.xsd
+         http://www.springframework.org/schema/context 
+         http://www.springframework.org/schema/context/spring-context-3.1.xsd">
+    
+    <bean id="adarshUtilHikariConfig" class="com.zaxxer.hikari.HikariConfig">
+        <property name="poolName" value="springHikariCP" />
+        <property name="connectionTestQuery" value="${jdbc.hikaricp.test.query}" />
+        <property name="dataSourceClassName" value="${jdbc.hikaricp.driver}" />
+        <property name="maximumPoolSize" value="${jdbc.hikaricp.max.pool.size}" />
+        <property name="idleTimeout" value="${jdbc.hikaricp.idle.time.out}" />
+        <property name="dataSourceProperties">
+            <props>
+                <prop key="url">${jdbc.url.prefix}${jdbc.host}:${jdbc.port}/${jdbc.dbname}</prop>
+                <prop key="user">${jdbc.user}</prop>
+                <prop key="password">${jdbc.password}</prop>
+                <prop key="cachePrepStmts">${jdbc.hikaricp.cachePrepStmts}</prop>
+                <prop key="prepStmtCacheSize">${jdbc.hikaricp.prepStmtCacheSize}</prop>
+                <prop key="prepStmtCacheSqlLimit">${jdbc.hikaricp.prepStmtCacheSqlLimit}</prop>
+                <prop key="useServerPrepStmts">${jdbc.hikaricp.useServerPrepStmts}</prop>
+            </props>
+        </property>
+    </bean>
+    
+    <bean id="adarshUtilDataSource"
+          class="com.zaxxer.hikari.HikariDataSource"
+          scope="singleton"
+          destroy-method="close">
+        <constructor-arg ref="adarshUtilHikariConfig"/>
+    </bean>
+    
+    <bean id="adarshUtilJdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+        <property name="dataSource" ref="adarshUtilDataSource"/>
+    </bean>
+    
+    <bean id="adarshUtilSessionFactory"  class="org.springframework.orm.hibernate4.LocalSessionFactoryBean" 
+          name="adarshUtilSessionFactory">
+        <property name="dataSource" ref="adarshUtilDataSource" />
+        <property name="packagesToScan">
+            <list>
+                <value>com.adarsh.model</value>
+            </list>
+        </property>
+        <property name="hibernateProperties">
+            <props>
+                <prop key="hibernate.dialect">org.hibernate.dialect.MySQL5Dialect</prop>
+                <prop key="hibernate.connection.release_mode">auto</prop>
+                <prop key="hibernate.show_sql">false</prop>
+                <prop key="hibernate.enable_lazy_load_no_trans">true</prop>
+                <prop key="hibernate.cache.use_query_cache">false</prop>
+                <prop key="hibernate.cache.use_second_level_cache">false</prop>
+                <!--<prop key="hibernate.cache.region.factory_class">org.hibernate.cache.ehcache.SingletonEhCacheRegionFactory</prop>-->
+                <prop key="hibernate.hbm2ddl.auto">true</prop>
+                <!--<prop key="hibernate.cache.provider_class">org.hibernate.cache.SingletonEhCacheProvider</prop>-->
+                <!--<prop key="net.sf.ehcache.configurationResourceName">com/em/yms/is/config/is-ehcache-config.xml</prop>-->
+            </props>
+        </property>
+    </bean>
+    
+    <bean id="adarshUtilTxManager" class="org.springframework.orm.hibernate4.HibernateTransactionManager">
+        <property name="sessionFactory" ref="adarshUtilSessionFactory" />
+    </bean>
+</beans>

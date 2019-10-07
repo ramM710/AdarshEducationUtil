@@ -1,0 +1,191 @@
+// The buildscript {} and other plugins {} script blocks need to be first.
+buildscript {
+    repositories {
+        mavenLocal() 
+        maven {
+            url 'http://repository.mulesoft.org/releases'
+        }
+        jcenter()
+    }
+    dependencies {
+        classpath group: 'org.mulesoft.build', name: 'mule-gradle-plugin', version: '1.2.2'
+        classpath "com.netflix.nebula:gradle-lint-plugin:11.5.0"
+        classpath "gradle.plugin.com.github.spotbugs:spotbugs-gradle-plugin:1.6.2"
+        //        classpath "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.6.2"
+    }
+}
+
+plugins {
+    id "com.jfrog.artifactory" version "4.7.5"
+}
+
+allprojects{
+
+    apply plugin: 'mule-dependencies' 
+    mule.version = '3.3.0'
+    mule.muleEnterprise=false
+    
+    apply plugin: 'java'
+    apply plugin: 'maven-publish'
+    apply plugin : 'pmd'
+    apply plugin : 'nebula.lint'
+    apply plugin : 'application'
+
+    repositories {
+        mavenLocal() 
+        maven {
+            url "http://" + JFROGHOST + ":" + JFROGPORT + "/artifactory/" + JFROGREPOSITORY 
+            credentials {
+                username =JFROGUSER
+                password =JFROGPASSWORD
+            }
+            name = "maven-main-cache"
+        }
+        jcenter()
+    }
+
+    group = 'com.adarsh'
+    version = "0.0.1"
+    status = 'integration'
+}
+
+compileJava {
+    options.compilerArgs << '-Xlint:unchecked'
+}
+
+artifactory {
+    publish {
+        defaults {
+            publishConfigs('archives')
+        }
+    }
+}
+
+apply plugin: 'java'
+
+sourceCompatibility = '1.8'
+[compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
+
+// NetBeans will automatically add "run" and "debug" tasks relying on the
+// "mainClass" property. You may however define the property prior executing
+// tasks by passing a "-PmainClass=<QUALIFIED_CLASS_NAME>" argument.
+//
+// Note however, that you may define your own "run" and "debug" task if you
+// prefer. In this case NetBeans will not add these tasks but you may rely on
+// your own implementation.
+if (!hasProperty('mainClass')) {
+    ext.mainClass = ''
+}
+
+repositories {
+    mavenCentral()
+    // You may define additional repositories, or even remove "mavenCentral()".
+    // Read more about repositories here:
+    //   http://www.gradle.org/docs/current/userguide/dependency_management.html#sec:repositories
+}
+
+// your are likely to need the com.em prefix...
+mainClassName = 'com.adarsh.run.RunApp'
+applicationDefaultJvmArgs = ["-Xmx1024m", "-server", "-DAPP=UTIL", "-DLOG_HOME=..", "-Xmx1024m", "-XX:+CMSClassUnloadingEnabled", "-XX:+CMSPermGenSweepingEnabled"]
+
+task(debug, dependsOn: 'classes', type: JavaExec) {
+    main = 'com.adarsh.run.RunApp'
+    classpath = sourceSets.main.runtimeClasspath
+    debug true
+    jvmArgs = ["-Xmx1024m", "-server", "-DAPP=UTIL", "-DLOG_HOME=..", "-Xmx1024m", "-XX:+CMSClassUnloadingEnabled", "-XX:+CMSPermGenSweepingEnabled"]
+}
+
+test {
+    testLogging.showStandardStreams = true
+}
+
+configurations {
+    runtime.exclude group: "org.slf4j", module: "slf4j-log4j12"
+}
+
+dependencies {
+    compile (group: 'org.slf4j', name: 'jcl-over-slf4j', version: '1.7.13')
+    compile (group: 'ch.qos.logback', name: 'logback-classic', version: '1.1.3')
+    compile (group: 'ch.qos.logback', name: 'logback-core', version: '1.1.3')
+    compile (group: 'com.google.code.gson', name: 'gson', version: '1.7.1'    )
+    compile (group: 'org.apache.activemq', name: 'activemq-all', version: '5.7.0') {
+        exclude group: 'org.slf4j'
+        exclude module: 'org.slf4j'
+    }
+    compile (group: 'org.aspectj', name: 'aspectjweaver', version: '1.8.2'	)
+    compile (group: 'antlr', name: 'antlr', version: '2.7.7')
+    compile (group: 'xerces', name: 'xercesImpl', version: '2.8.0')
+    compile (group: 'org.springframework', name: 'spring-aop', version: '4.0.0.RELEASE')
+
+    // as per my understanding below spring framework  are merged with someother and they don't have version 4.0.0 and another version cannot be added.
+    //    compile (group: 'org.springframework', name: 'spring-asm', version: '3.1.4.RELEASE')
+    //    compile group: 'org.springframework', name: 'spring-struts', version: '3.2.18.RELEASE'
+
+    compile (group: 'org.springframework', name: 'spring-aspects', version: '4.0.0.RELEASE')
+    compile (group: 'org.springframework', name: 'spring-beans', version: '4.0.0.RELEASE')
+    compile (group: 'org.springframework', name: 'spring-context', version: '4.0.0.RELEASE')
+    compile (group: 'org.springframework', name: 'spring-context-support', version: '4.0.0.RELEASE')
+    compile (group: 'org.springframework', name: 'spring-core', version: '4.0.0.RELEASE')
+    compile (group: 'org.springframework', name: 'spring-expression', version: '4.0.0.RELEASE')
+    compile (group: 'org.springframework', name: 'spring-instrument', version: '4.0.0.RELEASE')
+    compile (group: 'org.springframework', name: 'spring-instrument-tomcat', version: '4.0.0.RELEASE')
+    compile (group: 'org.springframework', name: 'spring-jdbc', version: '4.0.0.RELEASE')
+    compile (group: 'org.springframework', name: 'spring-jms', version: '4.0.0.RELEASE')
+    compile (group: 'org.springframework', name: 'spring-orm', version: '4.0.0.RELEASE')
+    compile (group: 'org.springframework', name: 'spring-oxm', version: '4.0.0.RELEASE')
+    compile (group: 'org.springframework', name: 'spring-test', version: '4.0.0.RELEASE'				)
+    compile (group: 'org.springframework', name: 'spring-tx', version: '4.0.0.RELEASE')
+    compile (group: 'org.springframework', name: 'spring-web', version: '4.0.0.RELEASE')
+    compile (group: 'org.springframework', name: 'spring-webmvc', version: '4.0.0.RELEASE')
+    compile (group: 'org.springframework', name: 'spring-webmvc-portlet', version: '4.0.0.RELEASE')
+
+    compile (group: 'org.apache.avro', name: 'avro', version: '1.6.3')
+    compile (group: 'dom4j', name: 'dom4j', version: '1.6.1')
+    compile (group: 'org.hibernate.common', name: 'hibernate-commons-annotations', version: '4.0.1.Final')
+    compile (group: 'org.hibernate', name: 'hibernate-core', version: '4.1.9.Final')
+    compile (group: 'org.hibernate.javax.persistence', name: 'hibernate-jpa-2.0-api', version: '1.0.0.Final')
+    compile (group: 'org.codehaus.jackson', name: 'jackson-core-asl', version: '1.9.2')
+    compile (group: 'org.codehaus.jackson', name: 'jackson-mapper-asl', version: '1.9.2')
+    compile (group: 'org.javassist', name: 'javassist', version: '3.17.1-GA')
+    compile (group: 'org.jboss.logging', name: 'jboss-logging', version: '3.1.0.GA')
+    compile (group: 'org.apache.lucene', name: 'lucene-core', version: '3.6.2')
+    compile (group: 'org.xerial.snappy', name: 'snappy-java', version: '1.0.4.1')
+    compile group: 'com.zaxxer', name: 'HikariCP-java7', version: '2.4.13'
+    compile (group: 'org.apache.activemq', name: 'activemq-pool', version: '5.7.0')
+    compile (group: 'aopalliance', name: 'aopalliance', version: '1.0')
+    compile (group: 'org.aspectj', name: 'aspectjrt', version: '1.8.2')
+    compile (group: 'org.apache.activemq', name: 'activemq-spring', version: '5.7.0')
+    compile (group: 'asm', name: 'asm', version: '3.1')
+    compile (group: 'asm', name: 'asm-commons', version: '2.2.3')
+    compile (group: 'cglib', name: 'cglib', version: '2.2.2')
+    compile (group: 'org.mule.modules', name: 'mule-module-cxf', version: '3.3.0')
+    compile (group: 'org.mule.transports', name: 'mule-transport-http', version: '3.3.0')
+    compile (group: 'org.mule.transports', name: 'mule-transport-tcp', version: '3.3.0')
+    compile (group: 'commons-beanutils', name: 'commons-beanutils', version: '1.8.3')
+    compile (group: 'commons-cli', name: 'commons-cli', version: '1.2')
+    compile (group: 'commons-collections', name: 'commons-collections', version: '3.2.1')
+    compile (group: 'commons-httpclient', name: 'commons-httpclient', version: '3.1')
+    compile (group: 'commons-io', name: 'commons-io', version: '1.4')
+    compile (group: 'commons-lang', name: 'commons-lang', version: '2.6')
+    compile (group: 'commons-logging', name: 'commons-logging', version: '1.1')
+    compile (group: 'org.apache.commons', name: 'commons-math3', version: '3.1.1')
+    compile (group: 'commons-pool', name: 'commons-pool', version: '1.6')
+    compile (group: 'commons-jexl', name: 'commons-jexl', version: '1.1')
+    compile (group: 'net.sf.ehcache', name: 'ehcache', version: '2.7.4')
+    compile (group: 'com.google.guava', name: 'guava', version: '14.0.1')
+    compile (group: 'org.hibernate', name: 'hibernate-ehcache', version: '4.1.9.Final')
+    compile (group: 'javax.mail', name: 'mail', version: '1.4.3')
+    compile (group: 'mysql', name: 'mysql-connector-java', version: '5.1.43')
+    compile (group: 'org.perf4j', name: 'perf4j', version: '0.9.16')
+    compile (group: 'wsdl4j', name: 'wsdl4j', version: '1.6.2')
+    
+    //    compile 'org.springframework:spring-web:4.0'
+    //    compile 'net.sf.ehcache:ehcache:2.7.8'
+    //    compile 'com.oracle:ojdbc6:11.2.0.3'
+    //    compile 'com.microsoft.sqlserver:sqljdbc4:4.0'
+    //    compile (group: 'org.mvel', name: 'mvel2', version: '2.0.19'){
+    //        force = true
+    //    }
+    
+    testCompile "junit:junit:4.11"
+}
