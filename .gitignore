@@ -1,2 +1,36 @@
-/build/
-/.nb-gradle/
+# Add any directories, files, or patterns you don't want to be tracked by version control
+nbproject/private/
+build/
+nbbuild/
+dist/
+nbdist/
+.nb-gradle/
+.gradle/
+#ant specific
+dist/
+build/
+private/
+catalog.xml
+velocity.log
+velocity.log.*
+server-db-jswdch1.properties
+
+*.license
+
+#netbeans specific
+core
+nbproject/*
+!nbproject/project.properties
+!nbproject/project.xml
+
+#java specific
+*.class
+
+#general swap/backup files
+*.so
+*.log
+*.out
+*~
+*.swp
+*.DS_Store
+*.lock
