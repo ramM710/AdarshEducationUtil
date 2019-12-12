@@ -1,25 +1,25 @@
 package com.adarsh.dao.impl;
 
-import com.adarsh.dao.UserDAO;
 import com.adarsh.generics.dao.GenericDAO4Impl;
-import com.adarsh.model.User;
-import org.hibernate.SessionFactory;
+import com.adarsh.model.MemberDetails;
 import org.springframework.jdbc.core.JdbcTemplate;
+import com.adarsh.dao.MemberDAO;
+import org.hibernate.SessionFactory;
 
 /**
  *
  * @author Ram Mishra
  */
-public class UserDAOImpl extends GenericDAO4Impl<User, Integer> implements UserDAO {
+public class MemberDAOImpl extends GenericDAO4Impl<MemberDetails, Integer> implements MemberDAO {
 
     private final JdbcTemplate jdbcTemplate;
 
-    public UserDAOImpl(JdbcTemplate jdbcTemplate, SessionFactory sessionFactory) {
+    public MemberDAOImpl(JdbcTemplate jdbcTemplate, SessionFactory sessionFactory) {
         this.jdbcTemplate = jdbcTemplate;
         super.setSessionFactory(sessionFactory);
     }
 
-    public UserDAOImpl() {
+    public MemberDAOImpl() {
         this.jdbcTemplate = null;
     }
 

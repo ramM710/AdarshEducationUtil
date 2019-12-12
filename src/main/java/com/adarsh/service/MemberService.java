@@ -1,13 +1,13 @@
 package com.adarsh.service;
 
-import com.adarsh.dao.RegistrationDAO;
 import com.adarsh.generics.service.GenericService;
 import com.adarsh.model.MemberDetails;
+import com.adarsh.dao.MemberDAO;
 
 /**
  *
  * @author Ram Mishra
  */
-public interface RegistrationService extends GenericService<RegistrationDAO, MemberDetails, Integer> {
+public interface MemberService extends GenericService<MemberDAO, MemberDetails, Integer> {
 
 }

@@ -16,6 +16,10 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.support.TransactionCallback;
+import org.springframework.transaction.support.TransactionTemplate;
 
 /**
  *
@@ -25,14 +29,16 @@ public class LoginScreen extends Application {
 
     private final JdbcTemplate jdbcTemplate;
 
-    private static UserService userService;
+    private final UserService userService;
 
-    public LoginScreen(JdbcTemplate jdbcTemplate) {
+    private final PlatformTransactionManager transactionManager;
+
+    public LoginScreen(JdbcTemplate jdbcTemplate,
+            UserService userService,
+            PlatformTransactionManager transactionManager) {
         this.jdbcTemplate = jdbcTemplate;
-    }
-
-    public void setUserService(UserService service) {
-        userService = service;
+        this.userService = userService;
+        this.transactionManager = transactionManager;
     }
 
     @Override
@@ -101,14 +107,21 @@ public class LoginScreen extends Application {
 //        launch(args);
 //    }
     private boolean validate(String userName, String password) {
-        List<User> users = userService.getAll();
-        if (!users.isEmpty()) {
-            for (User user : users) {
-                if (user.getUserName().equals(userName) && user.getPassword().equals(password)) {
-                    return true;
+
+        TransactionTemplate transactionTemplate = new TransactionTemplate(transactionManager);
+        return transactionTemplate.execute(new TransactionCallback<Boolean>() {
+            @Override
+            public Boolean doInTransaction(TransactionStatus ts) {
+                List<User> users = userService.getAll();
+                if (!users.isEmpty()) {
+                    for (User user : users) {
+                        if (user.getUserName().equals(userName) && user.getPassword().equals(password)) {
+                            return true;
+                        }
+                    }
                 }
+                return false;
             }
-        }
-        return false;
+        });
     }
 }

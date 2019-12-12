@@ -7,6 +7,6 @@ import com.adarsh.model.MemberDetails;
  *
  * @author Ram Mishra
  */
-public interface RegistrationDAO extends GenericDAO4<MemberDetails, Integer> {
+public interface MemberDAO extends GenericDAO4<MemberDetails, Integer> {
 
 }

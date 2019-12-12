@@ -1,15 +1,12 @@
 package com.adarsh.dao;
 
+import com.adarsh.generics.dao.GenericDAO4;
 import com.adarsh.model.User;
-import java.util.List;
 
 /**
  *
  * @author empc46
  */
-public interface UserDAO {
+public interface UserDAO extends GenericDAO4<User, Integer> {
 
-    void save(User user);
-
-    List<User> getAll();
 }

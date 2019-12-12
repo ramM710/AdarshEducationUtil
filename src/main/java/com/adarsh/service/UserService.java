@@ -1,15 +1,13 @@
 package com.adarsh.service;
 
+import com.adarsh.dao.UserDAO;
+import com.adarsh.generics.service.GenericService;
 import com.adarsh.model.User;
-import java.util.List;
 
 /**
  *
  * @author empc46
  */
-public interface UserService {
+public interface UserService extends GenericService<UserDAO, User, Integer> {
 
-    void save(User user);
-
-    List<User> getAll();
 }

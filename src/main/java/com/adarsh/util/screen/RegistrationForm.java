@@ -1,7 +1,6 @@
 package com.adarsh.util.screen;
 
 import com.adarsh.model.MemberDetails;
-import com.adarsh.service.RegistrationService;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -14,20 +13,21 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.Pane;
 import org.springframework.jdbc.core.JdbcTemplate;
+import com.adarsh.service.MemberService;
 
 public class RegistrationForm {
 
     private JdbcTemplate jdbcTemplate;
 
-    private RegistrationService registrationService;
+    private MemberService memberService;
 
     public RegistrationForm() {
     }
 
     public RegistrationForm(JdbcTemplate jdbcTemplate,
-            RegistrationService registrationService) {
+            MemberService memberService) {
         this.jdbcTemplate = jdbcTemplate;
-        this.registrationService = registrationService;
+        this.memberService = memberService;
     }
 
     public Pane run() {
@@ -130,7 +130,7 @@ public class RegistrationForm {
             RadioButton genderRadioButton = (RadioButton) genderGroup.getSelectedToggle();
 
             // @TO-DO: save the new members details 
-            registrationService.save(new MemberDetails(name, dateOfBirth, Integer.parseInt(mobileNo), genderRadioButton.getText(), address, referenceName));
+            memberService.save(new MemberDetails(name, dateOfBirth, Integer.parseInt(mobileNo), genderRadioButton.getText(), address, referenceName));
         } catch (Exception e) {
             e.getMessage();
         }

@@ -16,16 +16,14 @@
          http://activemq.apache.org/schema/core http://activemq.apache.org/schema/core/activemq-core-5.7.0.xsd">
 
 
-    <context:property-placeholder location="com/adarsh/config/adarsh-util.properties,
-                                            com/adarsh/config/adarsh-db.properties"/>
+    <bean id="userDAO" class="com.adarsh.dao.impl.UserDAOImpl" scope="singleton">
+        <constructor-arg ref = "jdbcTemplate"/>
+        <constructor-arg ref = "adarshUtilSessionFactory"/>
+    </bean>
     
-    <import resource="adarsh-hibernate-spring-mapping-config.xml"/>
-    
-    <import resource="adarsh-spring-services.xml"/>
-    
-    <import resource="adarsh-spring-internal.xml"/>
-    
-    <alias name="adarshUtilJdbcTemplate" alias="jdbcTemplate"/>
-    
+    <bean id="memberDAO" class="com.adarsh.dao.impl.MemberDAOImpl" scope="singleton">
+        <constructor-arg ref = "jdbcTemplate"/>
+        <constructor-arg ref = "adarshUtilSessionFactory"/>
+    </bean>
     
 </beans>

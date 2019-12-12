@@ -42,6 +42,9 @@ public class MemberDetails extends GenericModel<Serializable> {
         this.referenceName = referenceName;
     }
 
+    public MemberDetails() {
+    }
+
     public String getName() {
         return name;
     }

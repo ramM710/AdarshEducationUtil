@@ -1,11 +1,9 @@
 package com.adarsh.run;
 
-import com.adarsh.service.UserService;
 import com.adarsh.util.screen.LoginScreen;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
-import org.springframework.jdbc.core.JdbcTemplate;
 
 /**
  *
@@ -18,11 +16,8 @@ public class RunApp extends Application {
 
         ClassPathXmlApplicationContext applicationContext = new ClassPathXmlApplicationContext("com/adarsh/config/adarsh-spring-config.xml");
 
-        JdbcTemplate jdbcTemplate = applicationContext.getBean(JdbcTemplate.class);
-
         // start with login screen and then process further
-        LoginScreen loginScreen = new LoginScreen(jdbcTemplate);
-        loginScreen.setUserService(applicationContext.getBean(UserService.class));
+        LoginScreen loginScreen = applicationContext.getBean(LoginScreen.class);
         loginScreen.start(new Stage());
 
 //        // initialize main window
