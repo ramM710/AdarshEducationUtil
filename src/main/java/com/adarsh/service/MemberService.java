@@ -6,7 +6,7 @@ import com.adarsh.dao.MemberDAO;
 
 /**
  *
- * @author Ram Mishra
+ * @author Ram M
  */
 public interface MemberService extends GenericService<MemberDAO, MemberDetails, Integer> {
 

@@ -15,6 +15,10 @@ import javafx.scene.layout.Pane;
 import org.springframework.jdbc.core.JdbcTemplate;
 import com.adarsh.util.DataExecutor;
 
+/**
+ *
+ * @author Ram M
+ */
 public class RegistrationForm {
 
     private final JdbcTemplate jdbcTemplate;

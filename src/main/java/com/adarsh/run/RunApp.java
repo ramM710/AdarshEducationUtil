@@ -7,7 +7,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 /**
  *
- * @author empc46
+ * @author Ram M
  */
 public class RunApp extends Application {
 

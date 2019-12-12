@@ -5,7 +5,7 @@ import com.adarsh.model.MemberDetails;
 
 /**
  *
- * @author Ram Mishra
+ * @author Ram M
  */
 public interface MemberDAO extends GenericDAO4<MemberDetails, Integer> {
 

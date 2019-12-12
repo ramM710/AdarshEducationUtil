@@ -8,7 +8,7 @@ import javax.persistence.Table;
 
 /**
  *
- * @author Ram
+ * @author Ram M
  */
 @Entity
 @Table(name = "menu_list")

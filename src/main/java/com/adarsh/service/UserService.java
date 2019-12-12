@@ -6,7 +6,7 @@ import com.adarsh.model.User;
 
 /**
  *
- * @author empc46
+ * @author Ram M
  */
 public interface UserService extends GenericService<UserDAO, User, Integer> {
 

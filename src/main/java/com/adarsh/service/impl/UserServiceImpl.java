@@ -7,7 +7,7 @@ import com.adarsh.service.UserService;
 
 /**
  *
- * @author empc46
+ * @author Ram Mishra
  */
 public class UserServiceImpl
         extends GenericServiceImpl<UserDAO, User, Integer>

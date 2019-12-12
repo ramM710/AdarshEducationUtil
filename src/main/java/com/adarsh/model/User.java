@@ -9,7 +9,7 @@ import javax.persistence.Table;
 
 /**
  *
- * @author Ram
+ * @author Ram M
  */
 @Entity
 @Table(name = "user_details")

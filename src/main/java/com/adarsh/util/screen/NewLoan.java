@@ -12,7 +12,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 /**
  *
- * @author Ram Mishra
+ * @author Ram M
  */
 public class NewLoan {
 

@@ -8,7 +8,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 /**
  *
- * @author Ram Mishra
+ * @author Ram M
  */
 public class UserDAOImpl extends GenericDAO4Impl<User, Integer> implements UserDAO {
 

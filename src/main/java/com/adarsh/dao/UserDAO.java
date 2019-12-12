@@ -5,7 +5,7 @@ import com.adarsh.model.User;
 
 /**
  *
- * @author empc46
+ * @author Ram M
  */
 public interface UserDAO extends GenericDAO4<User, Integer> {
 

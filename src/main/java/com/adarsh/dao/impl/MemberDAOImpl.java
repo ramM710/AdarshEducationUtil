@@ -8,7 +8,7 @@ import org.hibernate.SessionFactory;
 
 /**
  *
- * @author Ram Mishra
+ * @author Ram M
  */
 public class MemberDAOImpl extends GenericDAO4Impl<MemberDetails, Integer> implements MemberDAO {
 
