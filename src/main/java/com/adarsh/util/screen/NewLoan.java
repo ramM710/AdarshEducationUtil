@@ -8,13 +8,19 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
-import javafx.scene.text.Text;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 /**
  *
  * @author empc46
  */
 public class NewLoan {
+
+    private final JdbcTemplate jdbcTemplate;
+
+    public NewLoan(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
 
     public Pane newLoanForm() {
 

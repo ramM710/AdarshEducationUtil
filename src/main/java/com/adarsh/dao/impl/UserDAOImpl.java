@@ -30,7 +30,7 @@ public class UserDAOImpl implements UserDAO {
 
     @Override
     public List<User> getAll() {
-        return jdbcTemplate.query("select * from test_server.user", (ResultSet rs) -> {
+        return jdbcTemplate.query("select * from test_server.user_details", (ResultSet rs) -> {
             List<User> users = new ArrayList<>();
             while (rs.next()) {
                 users.add(new User(rs.getString("name"), rs.getInt("mobile_no"),

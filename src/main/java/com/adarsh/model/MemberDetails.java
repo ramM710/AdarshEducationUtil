@@ -1,10 +1,9 @@
 package com.adarsh.model;
 
+import com.adarsh.generics.model.GenericModel;
+import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.Table;
 
 /**
@@ -13,18 +12,19 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "member_details")
-public class MemberDetails {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", unique = true, nullable = false)
-    private Integer id;
+public class MemberDetails extends GenericModel<Serializable> {
 
     @Column(name = "name")
     private String name;
 
+    @Column(name = "date_of_birth")
+    private String dateOfBirth;
+
     @Column(name = "mobile_no")
     private Integer mobileNumber;
+
+    @Column(name = "gender")
+    private String gender;
 
     @Column(name = "address")
     private String address;
@@ -32,17 +32,14 @@ public class MemberDetails {
     @Column(name = "reference")
     private String referenceName;
 
-    public MemberDetails(Integer id, String name, Integer mobileNumber,
-            String address, String referenceName) {
-        this.id = id;
+    public MemberDetails(String name, String dateOfBirth, Integer mobileNumber,
+            String gender, String address, String referenceName) {
         this.name = name;
+        this.dateOfBirth = dateOfBirth;
         this.mobileNumber = mobileNumber;
+        this.gender = gender;
         this.address = address;
         this.referenceName = referenceName;
-    }
-
-    public Integer getId() {
-        return id;
     }
 
     public String getName() {
@@ -59,6 +56,14 @@ public class MemberDetails {
 
     public String getReferenceName() {
         return referenceName;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public String getDateOfBirth() {
+        return dateOfBirth;
     }
 
 }

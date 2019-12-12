@@ -1,19 +1,34 @@
 package com.adarsh.util.screen;
 
+import com.adarsh.model.MemberDetails;
+import com.adarsh.service.RegistrationService;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-
 import javafx.scene.control.Button;
-import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.RadioButton;
+import javafx.scene.control.TextArea;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.Pane;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 public class RegistrationForm {
+
+    private JdbcTemplate jdbcTemplate;
+
+    private RegistrationService registrationService;
+
+    public RegistrationForm() {
+    }
+
+    public RegistrationForm(JdbcTemplate jdbcTemplate,
+            RegistrationService registrationService) {
+        this.jdbcTemplate = jdbcTemplate;
+        this.registrationService = registrationService;
+    }
 
     public Pane run() {
 
@@ -39,17 +54,21 @@ public class RegistrationForm {
         RadioButton femaleRadio = new RadioButton("female");
         femaleRadio.setToggleGroup(groupGender);
 
-        //Label for location 
-        Text locationLabel = new Text("location");
+        Text mobileNumberLabel = new Text("Mobile Number");
+        final TextField mobileNumberField = new TextField();
 
-        //Choice box for location 
-        final ChoiceBox locationchoiceBox = new ChoiceBox();
-        locationchoiceBox.getItems().addAll("Hyderabad", "Chennai", "Delhi", "Mumbai", "Vishakhapatnam");
+        Text addressLabel = new Text("Address");
+        final TextArea addressField = new TextArea();
+        addressField.setPrefWidth(150);
+        addressField.setWrapText(true);
+
+        Text referenceLabel = new Text("Reference Person");
+        final TextField referenceField = new TextField();
 
         //Label for register 
         Button buttonRegister = new Button("Register");
         buttonRegister.setOnAction((actionEvent) -> {
-            registerButtonActions(nameText.getText(), datePicker, groupGender, locationchoiceBox);
+            registerButtonActions(nameText.getText(), datePicker, groupGender, mobileNumberField.getText(), addressField.getText(), referenceField.getText());
         });
 
         //Creating a Grid Pane 
@@ -79,18 +98,25 @@ public class RegistrationForm {
         gridPane.add(maleRadio, 1, 2);
         gridPane.add(femaleRadio, 2, 2);
 
-        gridPane.add(locationLabel, 0, 6);
-        gridPane.add(locationchoiceBox, 1, 6);
+        gridPane.add(mobileNumberLabel, 0, 3);
+        gridPane.add(mobileNumberField, 1, 3);
+
+        gridPane.add(addressLabel, 0, 4);
+        gridPane.add(addressField, 1, 4);
+
+        gridPane.add(referenceLabel, 0, 5);
+        gridPane.add(referenceField, 1, 5);
 
         gridPane.add(buttonRegister, 2, 8);
 
         //Styling nodes   
-        buttonRegister.setStyle("-fx-background-color: darkslateblue; -fx-textfill: white;");
-
+//        buttonRegister.setStyle("-fx-background-color: grey; -fx-textfill: white;");
         nameLabel.setStyle("-fx-font: normal bold 15px 'serif' ");
         dobLabel.setStyle("-fx-font: normal bold 15px 'serif' ");
         genderLabel.setStyle("-fx-font: normal bold 15px 'serif' ");
-        locationLabel.setStyle("-fx-font: normal bold 15px 'serif' ");
+        mobileNumberLabel.setStyle("-fx-font: normal bold 15px 'serif' ");
+        addressLabel.setStyle("-fx-font: normal bold 15px 'serif' ");
+        referenceLabel.setStyle("-fx-font: normal bold 15px 'serif' ");
 
         //Setting the back ground color 
         gridPane.setStyle("-fx-background-color: BEIGE;");
@@ -98,16 +124,13 @@ public class RegistrationForm {
         return gridPane;
     }
 
-    private void registerButtonActions(String name, DatePicker dob, ToggleGroup genderGroup, ChoiceBox locations) {
+    private void registerButtonActions(String name, DatePicker dob, ToggleGroup genderGroup, String mobileNo, String address, String referenceName) {
         try {
             String dateOfBirth = dob.getValue().toString();
-
             RadioButton genderRadioButton = (RadioButton) genderGroup.getSelectedToggle();
-            String gender = genderRadioButton.getText();
 
-            String location = locations.getValue().toString();
-
-            // @TO-DO: save the new members details            
+            // @TO-DO: save the new members details 
+            registrationService.save(new MemberDetails(name, dateOfBirth, Integer.parseInt(mobileNo), genderRadioButton.getText(), address, referenceName));
         } catch (Exception e) {
             e.getMessage();
         }
