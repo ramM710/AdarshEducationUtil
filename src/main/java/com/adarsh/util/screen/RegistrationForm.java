@@ -13,21 +13,18 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.Pane;
 import org.springframework.jdbc.core.JdbcTemplate;
-import com.adarsh.service.MemberService;
+import com.adarsh.util.DataExecutor;
 
 public class RegistrationForm {
 
-    private JdbcTemplate jdbcTemplate;
+    private final JdbcTemplate jdbcTemplate;
 
-    private MemberService memberService;
-
-    public RegistrationForm() {
-    }
+    private final DataExecutor dataExecutor;
 
     public RegistrationForm(JdbcTemplate jdbcTemplate,
-            MemberService memberService) {
+            DataExecutor dataExecutor) {
         this.jdbcTemplate = jdbcTemplate;
-        this.memberService = memberService;
+        this.dataExecutor = dataExecutor;
     }
 
     public Pane run() {
@@ -129,8 +126,15 @@ public class RegistrationForm {
             String dateOfBirth = dob.getValue().toString();
             RadioButton genderRadioButton = (RadioButton) genderGroup.getSelectedToggle();
 
-            // @TO-DO: save the new members details 
-            memberService.save(new MemberDetails(name, dateOfBirth, Integer.parseInt(mobileNo), genderRadioButton.getText(), address, referenceName));
+            // @TO-DO: save the new members details
+            MemberDetails memberDetails = new MemberDetails(
+                    name, dateOfBirth,
+                    Integer.parseInt(mobileNo),
+                    genderRadioButton.getText(),
+                    address, referenceName);
+
+            dataExecutor.addNewMember(memberDetails);
+
         } catch (Exception e) {
             e.getMessage();
         }

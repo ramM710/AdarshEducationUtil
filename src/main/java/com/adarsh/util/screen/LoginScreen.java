@@ -1,9 +1,7 @@
 package com.adarsh.util.screen;
 
-import com.adarsh.model.User;
-import com.adarsh.service.UserService;
-import com.adarsh.util.MainWindow;
-import java.util.List;
+import com.adarsh.run.MainWindow;
+import com.adarsh.util.DataExecutor;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -16,10 +14,6 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.transaction.PlatformTransactionManager;
-import org.springframework.transaction.TransactionStatus;
-import org.springframework.transaction.support.TransactionCallback;
-import org.springframework.transaction.support.TransactionTemplate;
 
 /**
  *
@@ -29,16 +23,12 @@ public class LoginScreen extends Application {
 
     private final JdbcTemplate jdbcTemplate;
 
-    private final UserService userService;
-
-    private final PlatformTransactionManager transactionManager;
+    private final DataExecutor dataExecutor;
 
     public LoginScreen(JdbcTemplate jdbcTemplate,
-            UserService userService,
-            PlatformTransactionManager transactionManager) {
+            DataExecutor dataExecutor) {
         this.jdbcTemplate = jdbcTemplate;
-        this.userService = userService;
-        this.transactionManager = transactionManager;
+        this.dataExecutor = dataExecutor;
     }
 
     @Override
@@ -72,11 +62,11 @@ public class LoginScreen extends Application {
             status.setText("Login successful !!");
             primaryStage.close();
 
-            if (validate(userName, password)) {
+            if (dataExecutor.validateLogin(userName, password)) {
                 status.setText("Login successful !!");
                 primaryStage.close();
 
-                MainWindow mainWindow = new MainWindow(jdbcTemplate);
+                MainWindow mainWindow = new MainWindow(jdbcTemplate, dataExecutor);
                 mainWindow.start(new Stage());
             } else {
                 status.setText("Wrong credentials !!");
@@ -106,22 +96,4 @@ public class LoginScreen extends Application {
 //    public static void main(String[] args) {
 //        launch(args);
 //    }
-    private boolean validate(String userName, String password) {
-
-        TransactionTemplate transactionTemplate = new TransactionTemplate(transactionManager);
-        return transactionTemplate.execute(new TransactionCallback<Boolean>() {
-            @Override
-            public Boolean doInTransaction(TransactionStatus ts) {
-                List<User> users = userService.getAll();
-                if (!users.isEmpty()) {
-                    for (User user : users) {
-                        if (user.getUserName().equals(userName) && user.getPassword().equals(password)) {
-                            return true;
-                        }
-                    }
-                }
-                return false;
-            }
-        });
-    }
 }

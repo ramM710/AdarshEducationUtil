@@ -1,5 +1,6 @@
-package com.adarsh.util;
+package com.adarsh.run;
 
+import com.adarsh.util.DataExecutor;
 import com.adarsh.util.screen.BorderPaneLeftPanel;
 import com.adarsh.util.screen.RegistrationForm;
 import com.adarsh.util.screen.NewLoan;
@@ -30,8 +31,12 @@ public class MainWindow extends Application {
 
     private final JdbcTemplate jdbcTemplate;
 
-    public MainWindow(JdbcTemplate jdbcTemplate) {
+    private final DataExecutor dataExecutor;
+
+    public MainWindow(JdbcTemplate jdbcTemplate,
+            DataExecutor dataExecutor) {
         this.jdbcTemplate = jdbcTemplate;
+        this.dataExecutor = dataExecutor;
     }
 
     @Override
@@ -103,7 +108,7 @@ public class MainWindow extends Application {
     }
 
     private Pane addMemberForm() {
-        RegistrationForm registrationForm = new RegistrationForm();
+        RegistrationForm registrationForm = new RegistrationForm(jdbcTemplate, dataExecutor);
         return registrationForm.run();
     }
 

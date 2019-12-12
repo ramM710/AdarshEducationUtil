@@ -17,15 +17,21 @@
 
 
     
+    <bean id="dataExecutor" class="com.adarsh.util.DataExecutor" scope="singleton">
+        <constructor-arg ref="userService"/>
+        <constructor-arg ref="memberService"/>
+        <constructor-arg ref="adarshUtilJdbcTemplate"/>
+        <constructor-arg ref="adarshUtilTxManager"/>
+    </bean>
+    
     <bean id="loginScreen" class="com.adarsh.util.screen.LoginScreen" scope="singleton">
         <constructor-arg ref="adarshUtilJdbcTemplate"/>
-        <constructor-arg ref="userService"/>
-        <constructor-arg ref="adarshUtilTxManager"/>
+        <constructor-arg ref="dataExecutor"/>
     </bean>
     
     <bean id="registrationForm" class="com.adarsh.util.screen.RegistrationForm" scope="singleton">
         <constructor-arg ref="adarshUtilJdbcTemplate"/>
-        <constructor-arg ref="memberService"/>
+        <constructor-arg ref="dataExecutor"/>
     </bean>
     
     <bean id="newLoan" class="com.adarsh.util.screen.NewLoan" scope="singleton">
